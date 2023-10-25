@@ -1,13 +1,20 @@
 import "../styles/popup.css";
 import Button from "react-bootstrap/Button";
 import Form from 'react-bootstrap/Form';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const clientid = "8d71564a476c3c8a3833";
 
-export default function Popup({ isDataReceived, isTokenReceived ,reqUserData , userToken }) {
+export default function Popup({ isDataReceived, isTokenReceived ,reqUserData , userToken , isCodeReceived }) {
   const [username, setUsername] = useState("");
   const [displayMessage, setDisplayMessage] = useState("Enter Username to see their stats");
+  const [initialDisplaymsg, setInitialDisplaymsg] = useState("Sign in with Github to continue");
+
+  useEffect(() => {
+    if (isCodeReceived) {
+      setInitialDisplaymsg("Please wait... this might take a while ...contacting backend server");
+    }
+  } , [isCodeReceived])
 
   // redirects to github oauth page
   async function loginWithGithub() {
@@ -20,8 +27,8 @@ export default function Popup({ isDataReceived, isTokenReceived ,reqUserData , u
     !isTokenReceived ? (
       <div className="popup ">
         <div className="popup-container">
-          <p>Sign in with Github to continue</p>
-          <Button variant="outline-primary" onClick={loginWithGithub}>
+          <p>{initialDisplaymsg}</p>
+          <Button variant="outline-primary" onClick={() => loginWithGithub()}>
             SignIn
           </Button>{" "}
         </div>

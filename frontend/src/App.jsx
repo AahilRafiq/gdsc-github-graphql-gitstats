@@ -6,6 +6,7 @@ import Popup from "./components/Popup.jsx";
 
 export default function App() {
   const [userData, setUserData] = useState(null);
+  const [isCodeReceived, setIsCodeReceived] = useState(false);
   const [isTokenReceived, setIsTokenReceived] = useState(false);
   const [isDataReceived, setIsDataReceived] = useState(false);
   const [userToken, setUserToken] = useState("");
@@ -14,9 +15,11 @@ export default function App() {
   useEffect(() => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
+
     const code = urlParams.get("code");
 
     if (code) {
+      setIsCodeReceived(true);
       const reqbody = {
         url: "https://gdsc-gitstats.onrender.com/graphql",
         method: "POST",
@@ -77,6 +80,7 @@ export default function App() {
     <>
       <Popup
         isDataReceived={isDataReceived}
+        isCodeReceived={isCodeReceived}
         isTokenReceived={isTokenReceived}
         reqUserData={reqUserData}
         userToken={userToken}
