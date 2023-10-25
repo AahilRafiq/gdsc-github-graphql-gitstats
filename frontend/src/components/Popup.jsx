@@ -7,8 +7,9 @@ const clientid = "8d71564a476c3c8a3833";
 
 export default function Popup({ isDataReceived, isTokenReceived ,reqUserData , userToken }) {
   const [username, setUsername] = useState("");
-  const [displayMessage, setDisplayMessage] = useState("Enter username to see their stats");
+  const [displayMessage, setDisplayMessage] = useState("Enter Username to see their stats");
 
+  // redirects to github oauth page
   async function loginWithGithub() {
     window.location.assign(
       `https://github.com/login/oauth/authorize?client_id=${clientid}`

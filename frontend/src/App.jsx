@@ -18,7 +18,7 @@ export default function App() {
 
     if (code) {
       const reqbody = {
-        url: "http://localhost:5000/graphql",
+        url: "https://gdsc-gitstats.onrender.com/graphql",
         method: "POST",
         data: {
           query: `
@@ -47,7 +47,7 @@ export default function App() {
   async function reqUserData(username, token) {
     try {
       const reqbody = {
-        url: "http://localhost:5000/graphql",
+        url: "https://gdsc-gitstats.onrender.com/graphql",
         method: "POST",
         data: {
           query: `
