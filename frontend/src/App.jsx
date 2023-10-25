@@ -6,9 +6,12 @@ import Popup from "./components/Popup.jsx";
 
 export default function App() {
   const [userData, setUserData] = useState(null);
+  const [isTokenReceived, setIsTokenReceived] = useState(false);
   const [isDataReceived, setIsDataReceived] = useState(false);
+  const [userToken, setUserToken] = useState("");
 
-  useEffect( () => {
+  //runs when the code from github oauth is received
+  useEffect(() => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const code = urlParams.get("code");
@@ -20,28 +23,65 @@ export default function App() {
         data: {
           query: `
             {
-              userQuery(code : "${code}")
+              userToken(code : "${code}")
             }
           `,
         },
-      }
+      };
 
-      axios(reqbody).then((res) => {
-        console.log(res.data.data.userQuery);
-        setUserData(res.data.data.userQuery);
-
-        setIsDataReceived(true);
-      }).catch((err) => {
-        console.log(err);
-        alert("Error Occured")
-      })
+      // gets encrypted token from backend
+      axios(reqbody)
+        .then((res) => {
+          console.log(res.data.data.userToken);
+          setUserToken(res.data.data.userToken);
+          setIsTokenReceived(true);
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("Error Occured");
+        });
     }
   }, []);
-  
+
+  // gets user data from backend for given username
+  async function reqUserData(username, token) {
+    try {
+      const reqbody = {
+        url: "http://localhost:5000/graphql",
+        method: "POST",
+        data: {
+          query: `
+            {
+              userQuery(clientToken:"${token}" ,username : "${username}")
+            }
+          `,
+        },
+      };
+      const res = await axios(reqbody);
+      const receivedData = JSON.parse(res.data.data.userQuery);
+
+      // if user is found then set the data
+      if (receivedData.data.user !== null) {
+        setUserData(receivedData.data.user);
+        setIsDataReceived(true);
+      } else {
+        alert("User not found");
+      }
+    } catch (err) {
+      console.log(err);
+      alert("Error Occured");
+    }
+  }
+
   return (
     <>
-      <Popup isDataReceived={isDataReceived} />
-      <Home userData={JSON.parse(userData)} isDataReceived={isDataReceived}/>
+      <Popup
+        isDataReceived={isDataReceived}
+        isTokenReceived={isTokenReceived}
+        reqUserData={reqUserData}
+        userToken={userToken}
+      />
+      <Home userData={userData} isDataReceived={isDataReceived} />
     </>
   );
 }

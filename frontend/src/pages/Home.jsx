@@ -8,10 +8,7 @@ import Alert from 'react-bootstrap/Alert';
 
 export default function Home({ userData , isDataReceived}) {
 
-    if(isDataReceived) {
-      userData = userData.data.viewer;
-    }
-
+  // Basically once data of given username is received , its displayed using bootstrap components
   return ( isDataReceived &&
     <>
       <Navbar bg="dark" data-bs-theme="dark">
@@ -46,12 +43,14 @@ export default function Home({ userData , isDataReceived}) {
     </div>
 
     {/* top repos and user repos */}
+    <div className="main-repo-container">
+
     <div className="repo-container">
         <h2>Top repositories</h2>
         <p>User's own repos and other repos he/she contributed to </p>
         {userData.topRepositories.nodes.map((repo) => (
             repo && (
-                <Alert key="light" variant="light">
+                <Alert key={crypto.randomUUID()} variant="light" >
                     {repo.name}
                     <Button variant="primary" size="sm" className="btn-margin" onClick={()=>window.location.assign(repo.url)}>Link</Button>
                 </Alert>
@@ -63,12 +62,13 @@ export default function Home({ userData , isDataReceived}) {
         <p>User's repos </p>
         {userData.repositories.nodes.map((repo) => (
             repo && (
-                <Alert key="light" variant="light">
+                <Alert key={crypto.randomUUID()} variant="light">
                     {repo.name}
                     <Button variant="primary" size="sm" className="btn-margin" onClick={()=>window.location.assign(repo.url)}>Link</Button>
                 </Alert>
             )
         ))}
+    </div>
     </div>
 
     </>
