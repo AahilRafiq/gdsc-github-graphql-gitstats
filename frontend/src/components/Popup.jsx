@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Form from 'react-bootstrap/Form';
 import { useEffect, useState } from "react";
 
-const clientid = "8d71564a476c3c8a3833";
+const clientid = import.meta.env.VITE_CLIENT_ID;
 
 export default function Popup({ isDataReceived, isTokenReceived ,reqUserData , userToken , isCodeReceived }) {
   const [username, setUsername] = useState("");
